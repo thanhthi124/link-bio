@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIEN TRAN SYSTEM</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="loader">
+    <div id="terminal"></div>
+</div>
+
+<div class="bg-grid"></div>
+<div class="scanline"></div>
+
+<div class="container">
+
+<img src="assets/images/avatar.jpg" class="avatar">
+
+<h1 class="glitch" data-text="TIEN TRAN">TIEN TRAN</h1>
+
+<div class="sysinfo">
+<p>USER: TIEN_TRAN</p>
+<p>STATUS: ONLINE</p>
+<p>ACCESS LEVEL: ROOT</p>
+<p>IP: 192.168.0.27</p>
+<p id="time"></p>
+</div>
+
+<div class="system">
+<div class="stat">
+CPU <span id="cpuPercent">0%</span>
+<div class="bar"><div class="fill" id="cpu"></div></div>
+</div>
+
+<div class="stat">
+RAM <span id="ramPercent">0%</span>
+<div class="bar"><div class="fill" id="ram"></div></div>
+</div>
+
+<div class="stat">
+PING <span id="pingPercent">0ms</span>
+<div class="bar"><div class="fill" id="ping"></div></div>
+</div>
+
+<p id="warning"></p>
+</div>
+
+<div class="section">
+<h2>🔗 Social</h2>
+<a href="https://youtube.com" target="_blank" class="btn">YouTube</a>
+<a href="https://discord.com" target="_blank" class="btn">Discord</a>
+<a href="https://facebook.com" target="_blank" class="btn">Facebook</a>
+</div>
+
+<div class="section">
+<h2>🎵 Music</h2>
+<audio id="audio" src="assets/music/song.mp3" autoplay loop></audio>
+<button onclick="toggleMusic()" class="btn">Bật / Tắt Nhạc</button>
+</div>
+
+<div class="section">
+<h2>📂 Gallery</h2>
+<div class="gallery">
+<img src="assets/images/img1.jpg" onclick="openImg(this)">
+<img src="assets/images/img2.jpg" onclick="openImg(this)">
+</div>
+</div>
+
+</div>
+
+<div id="popup" onclick="closeImg()">
+<img id="popupImg">
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
