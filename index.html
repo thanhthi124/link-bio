@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>🖥️ TIEN_TRAN · SYSTEM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0e0f;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      color: #00ff9d;
+    }
+    .terminal {
+      max-width: 720px;
+      width: 100%;
+      background: #0d1213;
+      border-radius: 16px;
+      border: 1px solid #1a2a2a;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.05), inset 0 0 40px rgba(0, 255, 157, 0.02);
+      padding: 24px 22px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .terminal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(0deg, rgba(0,255,157,0.02) 0px, rgba(0,255,157,0.02) 2px, transparent 2px, transparent 4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .terminal * { position: relative; z-index: 1; }
+
+    /* Header */
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1a2a2a;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .terminal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #00cc88;
+    }
+    .terminal-title i { font-size: 18px; color: #00ff9d; }
+    .terminal-dots { display: flex; gap: 8px; }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+
+    /* User info */
+    .user-line {
+      background: #0d1a1a;
+      border-left: 3px solid #00ff9d;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      font-size: 13px;
+    }
+    .user-line .label { color: #4d7a6a; }
+    .user-line .value { color: #00ff9d; font-weight: bold; }
+    .user-line .status-online { color: #27c93f; }
+    .user-line .status-online i { margin-right: 4px; }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .stat-box {
+      background: #0d1a1a;
+      border: 1px solid #1a2a2a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .stat-box .stat-label {
+      font-size: 10px;
+      color: #4d7a6a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stat-box .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #00ff9d;
+      margin-top: 4px;
+    }
+    .stat-box .stat-bar {
+      height: 4px;
+      background: #1a2a2a;
+      border-radius: 4px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .stat-box .stat-bar .fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    .fill-green { background: #00ff9d; width: 36%; }
+    .fill-yellow { background: #ffbd2e; width: 56%; }
+    .fill-blue { background: #4da6ff; width: 78%; }
+
+    /* Social */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .social-btn {
+      background: #0d1a1a;
+      border: 1px solid #1a2a2a;
+      border-radius: 10px;
+      padding: 12px 8px;
+      text-align: center;
+      color: #4d7a6a;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    .social-btn i {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+      color: #00cc88;
+    }
+    .social-btn:hover {
+      border-color: #00ff9d;
+      background: #0d2a2a;
+      transform: scale(1.02);
+    }
+    .social-btn:hover i { color: #00ff9d; }
+
+    /* Music */
+    .music-section {
+      background: #0d1a1a;
+      border: 1px solid #1a2a2a;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 12px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .music-section .music-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #4d7a6a;
+      font-size: 13px;
+    }
+    .music-section .music-label i { color: #00cc88; font-size: 18px; }
+    .music-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .music-item {
+      background: #1a2a2a;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      color: #4d7a6a;
+      border: 1px solid #2a3a3a;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .music-item:hover {
+      border-color: #00ff9d;
+      color: #00ff9d;
+    }
+    .music-item.active {
+      border-color: #00ff9d;
+      color: #00ff9d;
+      background: #0d2a2a;
+    }
+    .toggle-btn {
+      background: #1a2a2a;
+      border: none;
+      color: #00ff9d;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid #2a3a3a;
+    }
+    .toggle-btn:hover {
+      background: #00ff9d;
+      color: #0a0e0f;
+      border-color: #00ff9d;
+    }
+
+    /* Gallery */
+    .gallery-section {
+      background: #0d1a1a;
+      border: 1px solid #1a2a2a;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 12px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .gallery-section .gallery-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #4d7a6a;
+      font-size: 13px;
+    }
+    .gallery-section .gallery-label i { color: #00cc88; font-size: 18px; }
+    .gallery-thumbs {
+      display: flex;
+      gap: 6px;
+    }
+    .gallery-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #1a2a2a;
+      border: 1px solid #2a3a3a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4d7a6a;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      overflow: hidden;
+    }
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-thumb:hover {
+      border-color: #00ff9d;
+      color: #00ff9d;
+    }
+
+    /* Footer */
+    .footer-link {
+      text-align: center;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #1a2a2a;
+    }
+    .footer-link a {
+      color: #4d7a6a;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-link a i { color: #00cc88; }
+    .footer-link a:hover { color: #00ff9d; }
+    .footer-link a:hover i { color: #00ff9d; }
+
+    /* Env badge */
+    .env-badge {
+      display: inline-block;
+      background: #0d1a1a;
+      border: 1px solid #1a2a2a;
+      border-radius: 12px;
+      padding: 2px 12px;
+      font-size: 10px;
+      color: #4d7a6a;
+      margin-left: 8px;
+    }
+
+    @media (max-width: 500px) {
+      .terminal { padding: 16px 14px; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .stat-box .stat-value { font-size: 16px; }
+      .social-grid { grid-template-columns: repeat(2, 1fr); }
+      .user-line { font-size: 11px; gap: 4px 12px; }
+      .terminal-title { font-size: 12px; }
+      .music-list { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="terminal">
+
+  <!-- Header -->
+  <div class="terminal-header">
+    <div class="terminal-title">
+      <i class="fas fa-terminal"></i>
+      <span>TIEN_TRAN@system:~$</span>
+      <span style="color: #4d7a6a; font-size: 12px;">— bio</span>
+      <span class="env-badge"><i class="fas fa-file-alt"></i> .env</span>
+    </div>
+    <div class="terminal-dots">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+    </div>
+  </div>
+
+  <!-- User Info (từ .env) -->
+  <div class="user-line">
+    <span><span class="label">USER:</span> <span class="value">TIEN_TRAN</span></span>
+    <span><span class="label">STATUS:</span> <span class="status-online"><i class="fas fa-circle"></i> ONLINE</span></span>
+    <span><span class="label">ACCESS:</span> <span class="value">ROOT</span></span>
+    <span><span class="label">IP:</span> <span class="value">192.168.0.27</span></span>
+    <span><span class="label">SYSTEM TIME:</span> <span class="value" id="systemTime">20:03:36</span></span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-label"><i class="fas fa-microchip"></i> CPU</div>
+      <div class="stat-value" id="cpuStat">36%</div>
+      <div class="stat-bar"><div class="fill fill-green" id="cpuBar" style="width:36%"></div></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label"><i class="fas fa-memory"></i> RAM</div>
+      <div class="stat-value" id="ramStat">56%</div>
+      <div class="stat-bar"><div class="fill fill-yellow" id="ramBar" style="width:56%"></div></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label"><i class="fas fa-wifi"></i> PING</div>
+      <div class="stat-value" id="pingStat">78ms</div>
+      <div class="stat-bar"><div class="fill fill-blue" id="pingBar" style="width:78%"></div></div>
+    </div>
+  </div>
+
+  <!-- Social Links (từ .env) -->
+  <div class="social-grid" id="socialGrid">
+    <a href="https://github.com/tientran-dev" class="social-btn" target="_blank">
+      <i class="fab fa-github"></i> <span>GitHub</span>
+    </a>
+    <a href="https://discord.gg/tientran" class="social-btn" target="_blank">
+      <i class="fab fa-discord"></i> <span>Discord</span>
+    </a>
+    <a href="https://facebook.com/tientran.official" class="social-btn" target="_blank">
+      <i class="fab fa-facebook"></i> <span>Facebook</span>
+    </a>
+    <a href="https://youtube.com/@tientran" class="social-btn" target="_blank">
+      <i class="fab fa-youtube"></i> <span>YouTube</span>
+    </a>
+  </div>
+
+  <!-- Music Section (từ .env) -->
+  <div class="music-section">
+    <div class="music-label">
+      <i class="fas fa-music"></i>
+      <span>Music</span>
+      <span style="color: #4d7a6a; font-size: 11px;" id="currentMusic">🎵 gao_remix.mp3</span>
+    </div>
+    <div class="music-list" id="musicList">
+      <span class="music-item active" data-song="gao_remix.mp3">gao_remix</span>
+      <span class="music-item" data-song="dong_que.wav">dong_que</span>
+      <span class="music-item" data-song="mua_roi.flac">mua_roi</span>
+      <span class="music-item" data-song="nhac_chieu.aac">nhac_chieu</span>
+      <span class="music-item" data-song="gao_beat.mp3">gao_beat</span>
+    </div>
+    <button class="toggle-btn" id="musicToggle" onclick="toggleMusic()">
+      <i class="fas fa-play"></i> Bật
+    </button>
+  </div>
+
+  <!-- Gallery (từ assets/avatars) -->
+  <div class="gallery-section">
+    <div class="gallery-label">
+      <i class="fas fa-images"></i>
+      <span>Gallery</span>
+      <span style="color: #4d7a6a; font-size: 11px;">📁 avatars/</span>
+    </div>
+    <div class="gallery-thumbs" id="galleryThumbs">
+      <div class="gallery-thumb" title="avatar1.png">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="gallery-thumb" title="avatar2.jpg">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="gallery-thumb" title="avatar3.webp">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="gallery-thumb" title="avatar4.png">
+        <i class="fas fa-user-circle"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-link">
+    <a href="https://thanhthi24.github.io" target="_blank">
+      <i class="fas fa-globe"></i>
+      thanhthi24.github.io
+    </a>
+  </div>
+
+  <div style="margin-top: 12px; font-size: 10px; color: #1a3a2a; text-align: right; border-top: 1px solid #0d1a1a; padding-top: 8px;">
+    <i class="fas fa-seedling"></i> SYSTEM v2.0 · ROOT · <span id="envStatus">.env loaded</span>
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  // SYSTEM TIME
+  // ============================================
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('systemTime').textContent = now.toTimeString().slice(0, 8);
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // ============================================
+  // MUSIC TOGGLE & SELECT
+  // ============================================
+  let musicOn = false;
+  let currentSong = 'gao_remix.mp3';
+
+  function toggleMusic() {
+    const btn = document.getElementById('musicToggle');
+    musicOn = !musicOn;
+    if (musicOn) {
+      btn.innerHTML = '<i class="fas fa-pause"></i> Tắt';
+      btn.style.borderColor = '#00ff9d';
+    } else {
+      btn.innerHTML = '<i class="fas fa-play"></i> Bật';
+      btn.style.borderColor = '#2a3a3a';
+    }
+  }
+
+  // Select music from list
+  document.querySelectorAll('.music-item').forEach(item => {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.music-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      currentSong = this.dataset.song;
+      document.getElementById('currentMusic').textContent = '🎵 ' + currentSong;
+    });
+  });
+
+  // ============================================
+  // RANDOM STATS (simulate system)
+  // ============================================
+  function randomStats() {
+    const cpu = Math.floor(Math.random() * 40) + 20;
+    const ram = Math.floor(Math.random() * 35) + 35;
+    const ping = Math.floor(Math.random() * 50) + 40;
+
+    document.getElementById('cpuStat').textContent = cpu + '%';
+    document.getElementById('ramStat').textContent = ram + '%';
+    document.getElementById('pingStat').textContent = ping + 'ms';
+
+    document.getElementById('cpuBar').style.width = cpu + '%';
+    document.getElementById('ramBar').style.width = ram + '%';
+    document.getElementById('pingBar').style.width = Math.min(ping, 100) + '%';
+  }
+  setInterval(randomStats, 4000);
+
+  // ============================================
+  // ENV STATUS
+  // ============================================
+  console.log('🖥️ TIEN_TRAN · SYSTEM ONLINE');
+  console.log('📄 .env loaded successfully');
+  console.log('🔗 Social links configured');
+  console.log('🎵 Music playlist: gao_remix.mp3, dong_que.wav, mua_roi.flac, nhac_chieu.aac, gao_beat.mp3');
+  console.log('📁 Assets: avatars/, backgrounds/, music/');
+
+  document.getElementById('envStatus').textContent = '✅ .env · ' + new Date().toLocaleTimeString();
+</script>
+
+</body>
+</html>
